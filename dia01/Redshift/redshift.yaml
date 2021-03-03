@@ -1,0 +1,73 @@
+Resources:
+
+  RedshiftOmnesTI:
+    Type: AWS::Redshift::Cluster
+    Properties:
+      AllowVersionUpgrade: true
+      AutomatedSnapshotRetentionPeriod: 5
+      AvailabilityZone: us-east-1a
+      ClusterIdentifier: omnesti-redshift
+      ClusterParameterGroupName: 
+        Ref: RedshiftParameterGroup
+      ClusterSubnetGroupName: 
+        Ref: RedshiftSubnetGroup
+      VpcSecurityGroupIds:
+        - Ref: RedshiftEC2SecurityGroup
+      ClusterType: multi-node
+      DBName: production
+      Encrypted: true
+      MasterUsername: admin
+      MasterUserPassword: Admin1234
+      NodeType: dc2.large 
+      NumberOfNodes: 2
+      PubliclyAccessible: true
+      IamRole:
+        - GetAtt: RedshiftRole.Arn  
+  
+  RedshiftParameterGroup:
+    Type: AWS::Redshift::redshiftClusterParameterGroup
+    Properties:
+      Description: Parametrer  Group for Redshift cluster 
+      ParameterGroupFamily: redshift-1.0   
+      Parameters:
+        - ParameterName: max_concurrency_scaling_clusters
+          ParameterValue: 1
+
+  RedshiftSubnetGroup:
+        Type: AWS::Redshift::ClusterSubnetGroup
+        Properties:
+          Description: Redshift Subnet Group
+          SubnetIds:
+            - Ref: RedshiftSubnet
+      
+  RedshiftSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-1a
+      VpcId: 
+        Ref: RedshiftVPC
+      CidrBlock: 10.0.0.0/24
+  
+  RedshiftVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+     
+  RedshiftEC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: redshift-security-group 
+      GroupDescription: Security Group for Redshift Access
+      VpcId: 
+        Ref: RedshiftVPC
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 5439
+          IpProtocol: tcp
+          ToPort: 5439
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 5439
+          IpProtocol: tcp
+          ToPort: 5439
