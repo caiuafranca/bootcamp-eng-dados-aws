@@ -1,0 +1,12 @@
+Description: Cria Bucket na AWS S3
+Resources:
+
+myBuckerS3:
+  Type: AWS::S3::Bucket
+  Properties: 
+    AccessControl: Private
+    BucketName: s3-bukcet-omnesti
+    BucketEncryption:
+      ServerSideEncryptionConfoguration:
+        - ServerSideEncryptionByDefault:
+          SSEAlgorithm: AES256
