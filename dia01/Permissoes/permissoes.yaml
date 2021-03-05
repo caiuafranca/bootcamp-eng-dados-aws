@@ -1,0 +1,34 @@
+Description: Permissoes AWS Data Engineer
+
+Resourses:
+  IamRoleDataEngineer:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+            Action:
+              - sts:AssumeRole  
+      Description:
+      ManagedPolicyArns:
+        - Ref: IamPolicyDataEngineer
+      RoleName: role-production-data-enginner
+
+  IamPolicyDataEngineer:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Descripton:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetBucketLocation
+              - s3:ListAllMyBuckets
+              - s3:ListBucket
+              - s3:GetObject
+            Resource:
+              - arn:aws:s3:::*

@@ -1,5 +1,15 @@
-Description: Cria Redshift AWS
+Description: Cria Stack Completa para o Cliente
 Resources:
+
+  S3BukcetOmnesti:
+    Type: AWS::S3::Bucket
+    Properties: 
+      AccessControl: Private
+      BucketName: bucket-s3-omnesti
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256  
 
   RedshiftOmnesTI:
     Type: AWS::Redshift::Cluster
